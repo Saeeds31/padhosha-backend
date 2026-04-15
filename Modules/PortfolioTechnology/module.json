@@ -1,0 +1,11 @@
+{
+    "name": "PortfolioTechnology",
+    "alias": "portfoliotechnology",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\PortfolioTechnology\\Providers\\PortfolioTechnologyServiceProvider"
+    ],
+    "files": []
+}

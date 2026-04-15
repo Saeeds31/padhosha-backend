@@ -1,0 +1,11 @@
+{
+    "name": "PortfolioImages",
+    "alias": "portfolioimages",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\PortfolioImages\\Providers\\PortfolioImagesServiceProvider"
+    ],
+    "files": []
+}

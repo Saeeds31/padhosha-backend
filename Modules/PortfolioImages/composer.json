@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/portfolioimages",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\PortfolioImages\\": "app/",
+            "Modules\\PortfolioImages\\Database\\Factories\\": "database/factories/",
+            "Modules\\PortfolioImages\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\PortfolioImages\\Tests\\": "tests/"
+        }
+    }
+}
