@@ -15,6 +15,7 @@ class PortfolioUpdateRequest extends FormRequest
             'title'            => ['required', 'string', 'max:255'],
             'main_image'             => ['sometimes', 'file', 'max:1024'],
             'link'       => ['sometimes', 'string'],
+            'slug'            => ['sometimes', 'string', 'max:255'],
             'meta_title'       => ['sometimes', 'string', 'max:255'],
             'meta_description' => ['sometimes', 'string'],
             'description'      => ['sometimes', 'string'],

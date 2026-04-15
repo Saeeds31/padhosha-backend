@@ -20,11 +20,11 @@ class PortfolioCategory extends Model
         'description',
         'meta_title',
         'meta_description',
+        'slug'
     ];
- 
+
     public function portfolios()
     {
-        return $this->belongsToMany(PortfolioCategory::class,'portfolios_categories');
+        return $this->belongsToMany(PortfolioCategory::class, 'portfolios_categories');
     }
-    
 }

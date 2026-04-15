@@ -25,6 +25,7 @@ class Portfolio extends Model
         'meta_title',
         'meta_description',
         'description',
+        'slug',
         'status'
     ];
     protected $casts = [

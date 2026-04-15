@@ -13,7 +13,8 @@ class PortfolioTechnologyStoreRequest extends FormRequest
     {
         return [
             'title'            => ['required', 'string', 'max:255'],
-            'icon'             => ['nullable', 'file', 'max:1024'],
+            'icon'             => ['required', 'file', 'max:1024'],
+            'slug'       => ['nullable', 'string', 'max:255'],
             'meta_title'       => ['required', 'string', 'max:255'],
             'meta_description' => ['required', 'string'],
             'description'      => ['nullable', 'string'],

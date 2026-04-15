@@ -15,6 +15,7 @@ class PortfolioCategoryUpdateRequest extends FormRequest
             'title'            => ['sometimes', 'string', 'max:255'],
             'icon'        => ['nullable','file', 'max:1024'],
             'meta_title'       => ['sometimes', 'string', 'max:255'],
+            'slug'       => ['sometimes', 'string', 'max:255'],
             'meta_description' => ['sometimes', 'string'],
             'description'      => ['sometimes', 'string'],
         ];

@@ -13,7 +13,8 @@ class PortfolioTechnologyUpdateRequest extends FormRequest
     {
         return [
             'title'            => ['sometimes', 'string', 'max:255'],
-            'icon'        => ['nullable', 'file', 'max:1024'],
+            'icon'        => ['sometimes', 'file', 'max:1024'],
+            'slug'       => ['sometimes', 'string', 'max:255'],
             'meta_title'       => ['sometimes', 'string', 'max:255'],
             'meta_description' => ['sometimes', 'string'],
             'description'      => ['sometimes', 'string'],

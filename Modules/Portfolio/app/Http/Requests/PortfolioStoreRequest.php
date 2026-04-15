@@ -13,6 +13,7 @@ class PortfolioStoreRequest extends FormRequest
     {
         return [
             'title'            => ['required', 'string', 'max:255'],
+            'slug'            => ['nullable', 'string', 'max:255'],
             'main_image'             => ['required', 'file', 'max:1024'],
             'link'       => ['nullable', 'string'],
             'meta_title'       => ['nullable', 'string', 'max:255'],

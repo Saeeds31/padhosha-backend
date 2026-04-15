@@ -18,10 +18,11 @@ class PortfolioTechnology extends Model
         'description',
         'meta_title',
         'meta_description',
+        'slug'
     ];
     protected $table = "technologies";
     public function portfiolios()
     {
-        return $this->belongsToMany(PortfolioTechnology::class, 'technology_portfolio', 'portfolio_id','technology_id');
+        return $this->belongsToMany(PortfolioTechnology::class, 'technology_portfolio', 'portfolio_id', 'technology_id');
     }
 }

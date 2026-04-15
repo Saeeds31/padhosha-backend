@@ -82,11 +82,6 @@ class PortfolioTechnologyController extends Controller
             $data['icon'] = $request->file('icon')->store('technologies/icons', 'public');
         } elseif ($request->filled('icon') && is_string($request->icon)) {
             $data['icon'] = $technology->icon;
-        } else {
-            if ($technology->icon) {
-                Storage::disk('public')->delete($technology->icon);
-            }
-            $data['icon'] = null;
         }
         $technology->update($data);
         $notifications->create(
