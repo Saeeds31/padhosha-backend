@@ -14,7 +14,7 @@ class PortfolioTechnologyController extends Controller
 {
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 10);
+        $perPage = $request->get('per_page', 100);
 
         $technologies = PortfolioTechnology::paginate($perPage);
 
