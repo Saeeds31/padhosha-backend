@@ -28,6 +28,11 @@ class RunController extends Controller
             'is_system' => true,
             'slug' => 'customer',
         ]);
+        Role::create([
+            'name' => 'کارفرما',
+            'is_system' => true,
+            'slug' => 'employer',
+        ]);
         $user->roles()->sync([$roleSuperAdmin]);
         return response()->json(['message' => 'تنظیمات اولیه انجام شد پرمیژن ها را اجرا کنید']);
     }
@@ -63,6 +68,7 @@ class RunController extends Controller
             'file'   => 'فایل',
             'fileCategory'   => 'دسته بندی فایل',
             'Menu'   => 'منو',
+            'employer'   => 'کارفرما',
             'order'   => 'سفارش',
             'city'   => 'شهر',
             'province'   => 'استان',
@@ -103,12 +109,14 @@ class RunController extends Controller
             'report_products' => 'گزارش محصولات',
             'comment_blogs' => 'کامنت مقالات',
             'comment_products' => 'کامنت مقالات',
+            'employer_comment' => 'کامنت کارفرما',
             'role_permission' => 'دسترسی نقش',
             'notifications_user' => 'اعلان کاربران',
             'notification_article' => 'اعلان مقالات',
             'notification_product' => 'اعلان محصولات',
             'notification_portfolio' => 'اعلان نمونه کار',
             'notification_content' => 'اعلان محتواها',
+            'notification_employer' => 'اعلان کارفرماها',
             'notification_file' => 'اعلان فایل ها',
             'notification_order' => 'اعلان سفارشات',
         ];

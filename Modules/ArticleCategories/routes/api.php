@@ -6,4 +6,7 @@ use Modules\ArticleCategories\Http\Controllers\ArticleCategoriesController;
 Route::middleware(['auth:sanctum'])->prefix('v1/admin')->group(function () {
     Route::apiResource('article-categories', ArticleCategoriesController::class)->names('articlecategories');
 });
-Route::get("/v1/admin/article-categories-by-child", [ArticleCategoriesController::class,'tree'])->name("articlecategoriestree");
+Route::get("/v1/admin/article-categories-by-child", [ArticleCategoriesController::class, 'tree'])->name("articlecategoriestree");
+Route::prefix('v1/front')->group(function () {
+    Route::get('articles-categories', [ArticleCategoriesController::class, 'frontArticlesCategories'])->name('frontArticlesCategories');
+});

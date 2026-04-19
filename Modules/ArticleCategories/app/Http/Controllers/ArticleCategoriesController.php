@@ -157,4 +157,15 @@ class ArticleCategoriesController extends Controller
             'message' => 'دسته بندی با موفقیت حذف شد',
         ]);
     }
+    public function frontArticlesCategories()
+    {
+        $categories = ArticleCategory::with('children')
+            ->whereNull('parent_id')
+            ->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'دسته بندی های مقاله به صورت درختی',
+            'data'    => $categories
+        ]);
+    }
 }

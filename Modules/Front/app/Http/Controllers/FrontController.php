@@ -10,6 +10,7 @@ use Modules\Articles\Models\Article;
 use Modules\Banners\Models\Banner;
 use Modules\Categories\Models\Category;
 use Modules\Menus\Models\Menu;
+use Modules\Portfolio\Models\Portfolio;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\ProductVariant;
 use Modules\Settings\Models\Setting;
@@ -90,12 +91,8 @@ class FrontController extends Controller
     public function home()
     {
         $data = [];
-        $data['selected_categories'] = Category::where('show_in_home', 1)->get();
-        $data['top_discounted_products'] = Product::topDiscounted();
-        $data['banners'] = Banner::groupedByPosition();
-        $data['sliders'] = Slider::orderBy('id')->get();
-        $data['new_products'] = Product::latestProducts();
         $data['blogs'] = Article::latestArticles();
+        $data['portfolios'] = Portfolio::homeData();
         return response()->json([
             'success' => true,
             'message' => 'اطلاعات صفحه اصلی',

@@ -44,4 +44,23 @@ class Portfolio extends Model
     {
         return $this->belongsToMany(PortfolioTechnology::class, 'technology_portfolio', 'portfolio_id', 'technology_id');
     }
+
+
+    public static function homeData()
+    {
+       
+        $portfolios = self::with(['categories', 'images', 'technologies'])
+            ->where('status', true)
+            ->get();
+
+        $grouped = [];
+
+        foreach ($portfolios as $portfolio) {
+            foreach ($portfolio->categories as $category) {
+                $grouped[$category->title][] = $portfolio;
+            }
+        }
+
+        return $grouped;
+    }
 }

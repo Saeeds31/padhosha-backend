@@ -8,6 +8,7 @@ use Modules\Articles\Models\Article;
 use Modules\Articles\Http\Requests\ArticleStoreRequest;
 use Modules\Articles\Http\Requests\ArticleUpdateRequest;
 use Illuminate\Support\Facades\Storage;
+use Modules\ArticleCategories\Models\ArticleCategory;
 use Modules\Notifications\Services\NotificationService;
 
 class ArticlesController extends Controller
@@ -15,14 +16,22 @@ class ArticlesController extends Controller
     public function frontArticles(Request $request)
     {
         $perPage = $request->get('per_page', 20);
-
-        $articles = Article::with('categories', 'author')
+        $query = Article::query();
+        $category = null;
+        if ($category_id = $request->get('category_id')) {
+            $category = ArticleCategory::findOrFail($category_id);
+            $query->whereHas('categories', function ($q) use ($category_id) {
+                $q->where('id', $category_id);
+            });
+        }
+        $articles = $query->with('categories', 'author')
             ->paginate($perPage);
 
         return response()->json([
             'success' => true,
             'message' => 'لیست مقالات',
-            'data'    => $articles
+            'data'    => $articles,
+            'category' => $category
         ]);
     }
     public function frontArticle($id)

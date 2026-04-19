@@ -58,9 +58,10 @@
             "Modules\\PortfolioImages\\": "Modules/PortfolioImages/app/",
             "Modules\\Portfolio\\": "Modules/Portfolio/app/",
             "Modules\\File\\": "Modules/File/app/",
+            "Modules\\Employer\\": "Modules/Employer/app/",
+            "Modules\\Logo\\": "Modules/Logo/app/",
             "Modules\\PortfolioTechnology\\": "Modules/PortfolioTechnology/app/",
             "Modules\\Settings\\": "Modules/Settings/app/",
-
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
