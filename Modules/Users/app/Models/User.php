@@ -11,6 +11,7 @@ use Modules\Wallet\Models\Wallet;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Cart\Models\Cart;
 use Modules\Comments\Models\Comment;
+use Modules\Employer\Models\Employer;
 use Modules\Products\Models\Product;
 
 // use Modules\Users\Database\Factories\UserFactory;
@@ -55,7 +56,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Wallet::class);
     }
-
+    public function employer()
+    {
+        return $this->hasOne(Employer::class);
+    }
     public function comments()
     {
         return $this->hasMany(Comment::class);

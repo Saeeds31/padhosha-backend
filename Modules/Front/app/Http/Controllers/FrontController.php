@@ -96,13 +96,21 @@ class FrontController extends Controller
         $data = [];
         $data['blogs'] = Article::latestArticles();
         $data['portfolios'] = Portfolio::homeData();
-        $data['comments'] =   User::whereHas('roles', function ($q) {
+   
+
+        $data['comments'] = User::whereHas('roles', function ($q) {
             $q->where('slug', 'employer');
         })
-            ->with(['comments' => function ($q) {
+            ->whereHas('comments', function ($q) {
+                $q->where('commentable_type', 'Support');
+            }) // ✅ این قسمت فقط کاربرانی را برمی‌گرداند که حداقل یک کامنت مرتبط دارند
+            ->with(['employer', 'comments' => function ($q) {
                 $q->where('commentable_type', 'Support');
             }])
-            ->latest()->take(12)->get();
+            ->latest()
+            ->take(12)
+            ->get();
+
         $data['logos'] = Employer::latest()->take(12)->select(['bussines_logo', 'link'])->get();
         return response()->json([
             'success' => true,
