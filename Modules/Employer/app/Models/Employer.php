@@ -14,6 +14,7 @@ class Employer extends Model
     protected $fillable = [
         'bussines_label',
         'bussines_logo',
+        'link',
         'user_id'
     ];
     public function user()

@@ -12,6 +12,7 @@ class EmployerUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'link'             => ['sometimes', 'string', 'max:255'],
             'bussines_label'             => ['sometimes', 'string', 'max:255'],
             'bussines_logo'             => ['sometimes', 'file', 'max:1024'],
             'full_name'             => ['sometimes', 'string', 'max:255'],

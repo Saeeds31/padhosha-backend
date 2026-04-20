@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Log;
 use Modules\Articles\Models\Article;
 use Modules\Banners\Models\Banner;
 use Modules\Categories\Models\Category;
+use Modules\Comments\Models\Comment;
+use Modules\Employer\Models\Employer;
 use Modules\Menus\Models\Menu;
 use Modules\Portfolio\Models\Portfolio;
 use Modules\Products\Models\Product;
 use Modules\Products\Models\ProductVariant;
 use Modules\Settings\Models\Setting;
 use Modules\Sliders\Models\Slider;
+use Modules\Users\Models\User;
 
 class FrontController extends Controller
 {
@@ -68,7 +71,7 @@ class FrontController extends Controller
             'data'    => $data
         ], 200);
     }
-   
+
     public function HomeProducts()
     {
         $categories = Category::with([
@@ -93,6 +96,14 @@ class FrontController extends Controller
         $data = [];
         $data['blogs'] = Article::latestArticles();
         $data['portfolios'] = Portfolio::homeData();
+        $data['comments'] =   User::whereHas('roles', function ($q) {
+            $q->where('slug', 'employer');
+        })
+            ->with(['comments' => function ($q) {
+                $q->where('commentable_type', 'Support');
+            }])
+            ->latest(12)->get();
+        $data['logos'] = Employer::latest(12)->select(['bussines_logo', 'link'])->get();
         return response()->json([
             'success' => true,
             'message' => 'اطلاعات صفحه اصلی',
