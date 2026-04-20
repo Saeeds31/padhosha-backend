@@ -14,7 +14,7 @@ class EmployerStoreRequest extends FormRequest
         return [
 
             'bussines_label'             => ['required', 'string', 'max:255'],
-            'link'             => ['null', 'string', 'max:255'],
+            'link'             => ['nullable', 'string', 'max:255'],
             'bussines_logo'             => ['required', 'file', 'max:1024'],
             'full_name'             => ['required', 'string', 'max:255'],
             'mobile'             => ['required', 'string', 'size:11'],

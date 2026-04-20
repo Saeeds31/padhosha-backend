@@ -13,6 +13,7 @@ class MenuUpdateRequest extends FormRequest
     {
         return [
             'title'     => ['sometimes', 'string', 'max:255'],
+            'group'      => ['required', 'string', 'max:255'],
             'link'      => ['sometimes', 'string', 'max:255'],
             'parent_id' => ['sometimes', 'nullable', 'exists:menus,id'],
             'icon'      => ['sometimes', 'file', 'max:255'],

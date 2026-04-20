@@ -16,6 +16,7 @@ class MenuStoreRequest extends FormRequest
             'link'      => ['nullable', 'string', 'max:255'],
             'parent_id' => ['nullable', 'exists:menus,id'],
             'icon'      => ['nullable', 'file', 'max:255'],
+            'group'      => ['required', 'string', 'max:255'],
         ];
     }
 

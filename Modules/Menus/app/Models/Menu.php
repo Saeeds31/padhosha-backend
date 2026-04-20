@@ -14,6 +14,7 @@ class Menu extends Model
         'link',
         'parent_id',
         'icon',
+        'group'
     ];
 
     public function parent()
