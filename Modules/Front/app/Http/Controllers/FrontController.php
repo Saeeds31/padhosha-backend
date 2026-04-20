@@ -102,8 +102,8 @@ class FrontController extends Controller
             ->with(['comments' => function ($q) {
                 $q->where('commentable_type', 'Support');
             }])
-            ->latest(12)->get();
-        $data['logos'] = Employer::latest(12)->select(['bussines_logo', 'link'])->get();
+            ->latest()->take(12)->get();
+        $data['logos'] = Employer::latest()->take(12)->select(['bussines_logo', 'link'])->get();
         return response()->json([
             'success' => true,
             'message' => 'اطلاعات صفحه اصلی',
@@ -126,9 +126,17 @@ class FrontController extends Controller
                 })->toArray();
             });
         // menus
-        $data['menus'] = Menu::with('children')
+        $menus = Menu::with('children')
             ->whereNull('parent_id')
             ->get();
+        $groupedMenus = [];
+        foreach ($menus as $menu) {
+            if (!isset($groupedMenus[$menu->group])) {
+                $groupedMenus[$menu->group] = [];
+            }
+            $groupedMenus[$menu->group][] = $menu;
+        }
+        $data['menus'] = $groupedMenus;
         return response()->json([
             'success' => true,
             'message' => 'home data successfully',
