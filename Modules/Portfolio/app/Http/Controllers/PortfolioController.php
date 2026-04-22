@@ -169,13 +169,13 @@ class PortfolioController extends Controller
                     ->orWhere('description', 'like', "%{$search}%");
             });
         }
-
-        if ($request->filled('category_ids')) {
-            $categoryIds = explode(',', $request->category_ids);
-            $query->whereHas('categories', function ($q) use ($categoryIds) {
-                $q->whereIn('id', $categoryIds);
+        $category = null;
+        if ($category_id = $request->get('category_id')) {
+            $query->whereHas('categories', function ($q) use ($category_id) {
+                $q->where('portfolio_category_id', $category_id);
             });
         }
+
 
 
 
@@ -186,6 +186,7 @@ class PortfolioController extends Controller
             'success' => true,
             'message' => 'لیست نمونه کارا',
             'data'    => $portfolios,
+            'category'    => $category,
         ]);
     }
     public function frontDetail(Request $request, $id)

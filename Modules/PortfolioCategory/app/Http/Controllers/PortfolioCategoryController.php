@@ -12,6 +12,15 @@ use Modules\PortfolioCategory\Models\PortfolioCategory;
 
 class PortfolioCategoryController extends Controller
 {
+    public function frontIndex()
+    {
+        $categories = PortfolioCategory::orderBy('id')->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'لیست دسته بندی های ',
+            'data'    => $categories
+        ]);
+    }
     // List all categories with pagination
     public function index(Request $request)
     {
