@@ -168,7 +168,7 @@ class EmployerController extends Controller
 
     public function EmployerCost(Request $request, $employerId)
     {
-        $employer = Employer::findOrFail($employerId)->first();
+        $employer = Employer::findOrFail($employerId);
         $query = Cost::query();
         if ($amount = $request->get('amount')) {
             $query->where('amount', '>=', $amount);
