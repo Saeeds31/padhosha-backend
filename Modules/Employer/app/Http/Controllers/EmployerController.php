@@ -180,6 +180,7 @@ class EmployerController extends Controller
         if ($dateTo = $request->get('dateTo')) {
             $query->whereDate('created_at', '<=', $dateTo);
         }
+        $query->where('employer_id',$employerId);
         $total = $query->sum('amount');
         $data = $query->paginate(20);
         return response()->json([
