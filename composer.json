@@ -58,6 +58,7 @@
             "Modules\\PortfolioImages\\": "Modules/PortfolioImages/app/",
             "Modules\\Portfolio\\": "Modules/Portfolio/app/",
             "Modules\\File\\": "Modules/File/app/",
+            "Modules\\Ticket\\": "Modules/Ticket/app/",
             "Modules\\Employer\\": "Modules/Employer/app/",
             "Modules\\Logo\\": "Modules/Logo/app/",
             "Modules\\PortfolioTechnology\\": "Modules/PortfolioTechnology/app/",

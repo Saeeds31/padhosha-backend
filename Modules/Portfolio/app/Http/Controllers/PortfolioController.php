@@ -9,6 +9,7 @@ use Modules\Notifications\Services\NotificationService;
 use Modules\Portfolio\Http\Requests\PortfolioStoreRequest;
 use Modules\Portfolio\Http\Requests\PortfolioUpdateRequest;
 use Modules\Portfolio\Models\Portfolio;
+use Modules\PortfolioCategory\Models\PortfolioCategory;
 use Modules\Products\Http\Requests\ProductStoreRequest;
 
 class PortfolioController extends Controller
@@ -172,13 +173,10 @@ class PortfolioController extends Controller
         $category = null;
         if ($category_id = $request->get('category_id')) {
             $query->whereHas('categories', function ($q) use ($category_id) {
-                $q->where('portfolio_category_id', $category_id);
+                $q->where('slug', $category_id);
             });
+            $category = PortfolioCategory::where('slug', $category_id)->first();
         }
-
-
-
-
 
         $portfolios = $query->paginate(15);
 

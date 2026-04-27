@@ -71,7 +71,9 @@ class UsersController extends Controller
             });
         }
 
-        $users = $query->paginate(20);
+        $users = $query->whereHas('roles', function ($query) {
+            $query->whereNotIn('slug', ['employer', 'superAdmin']);
+        })->paginate(20);
 
         return response()->json($users);
     }
@@ -86,7 +88,7 @@ class UsersController extends Controller
             });
         }
         $users = $query->whereHas('roles', function ($query) {
-            $query->whereNotIn('slug', ['customer', 'superAdmin']);
+            $query->whereNotIn('slug', ['customer', 'employer', 'superAdmin']);
         })->get();
         return response()->json($users);
     }

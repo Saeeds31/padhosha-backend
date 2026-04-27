@@ -16,6 +16,9 @@ Route::middleware(['auth:sanctum'])->prefix('v1/admin')->group(function () {
 });
 Route::post('v1/admin/login-verify', [AuthController::class, 'adminLogin'])->name("adminLogin");
 Route::post('v1/admin/send-token', [AuthController::class, 'adminSendToken'])->name("adminSendToken");
+Route::post('v1/employer/login', [AuthController::class, 'employerLogin'])->name("employerLogin");
+Route::post('v1/employer/send-token', [AuthController::class, 'adminSendToken'])->name("adminSendToken");
+
 Route::prefix('v1/front')->group(function () {
     Route::post('/check-mobile', [AuthController::class, 'checkMobile']);
     Route::post('/login-password', [AuthController::class, 'loginWithPassword']);

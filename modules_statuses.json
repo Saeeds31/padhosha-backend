@@ -33,5 +33,6 @@
     "PortfolioTechnology": true,
     "PortfolioImages": true,
     "File": true,
-    "Employer": true
+    "Employer": true,
+    "Ticket": true
 }

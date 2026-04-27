@@ -102,7 +102,12 @@ class RunController extends Controller
             }
         }
         $others = [
+            'employer_subscription' => 'مدیریت سطح پشتیبانی',
+            'employer_cost' => 'مدیریت هزینه های کارفرما',
+            'employer_deposit' => 'مدیریت پرداختی  های کارفرما',
             'dashboard_view' => 'داشبورد',
+            'ticket_view' => 'مشاهده تیکت ها',
+            'ticket_store' => 'افزودن تیکت',
             'report_users' => 'گزارش کاربران',
             'report_orders' => 'گزارش سفارش ها',
             'order_today' => 'سفارشات روز',

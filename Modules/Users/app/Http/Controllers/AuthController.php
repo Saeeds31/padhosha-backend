@@ -204,6 +204,45 @@ class AuthController extends Controller
         ], 403);
     }
 
+    public function employerLogin(Request $request)
+    {
+
+        $data = $request->validate([
+            'mobile' => 'required|digits:11',
+            'token'  => 'required|digits:6',
+        ]);
+        $mobile = trim($data['mobile']);
+        $otp = Otp::where('mobile', $mobile)
+            ->where('token', $data['token'])
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if (!$otp) {
+            return response()->json(
+                [
+                    'message' => 'کد اعتبار خود را از دست داده است مجدد تلاش کنید',
+                    'success' => false
+                ],
+                422
+            );
+        }
+
+        $user = User::where('mobile', $mobile)->first();
+        if ($user->roles()->where('slug', 'employer')->doesntExist()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'شما مجاز به انجام این عملیات نیستید.'
+            ], 403);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+            "success" => true,
+            'message' => 'خوش آمدید'
+        ]);
+    }
     public function adminLogin(Request $request)
     {
 
