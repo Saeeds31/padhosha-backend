@@ -72,7 +72,7 @@ class AuthController extends Controller
             ['token' => $token, 'expires_at' => now()->addMinutes(5)]
         );
 
-        $response = Http::get("https://api.kavenegar.com/v1/523159597A416A4A5A5A4F57564B7662436A6B55454764467672796F574F735648337055374A4F2B4445553D/verify/lookup.json", [
+        $response = Http::get("https://api.kavenegar.com/v1/766E333435704B712F6D626858324876395A396A79574F58584669374C4E7450634F613364505A4A6D2F453D/verify/lookup.json", [
             'receptor' => $mobile,
             'token'    => $token,
             'template' => "verify"

@@ -3,6 +3,7 @@
 namespace Modules\Ticket\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Modules\Employer\Models\Cost;
 use Modules\Employer\Models\Employer;
@@ -108,7 +109,7 @@ class TicketController extends Controller
             'title' => 'required|string|min:3',
             'description' => 'required|string|min:10',
             'file' => 'nullable|file|max:1024',
-            'audio' => 'nullable|file|max:4096',
+            'voice' => 'nullable|file|max:4096',
 
         ]);
         $ticket = Ticket::create([
@@ -119,7 +120,7 @@ class TicketController extends Controller
         $message = Message::create([
             'message' => $validated['description'],
             'attachment' => $validated['file'],
-            'voice' => $validated['audio'],
+            'voice' => $validated['voice'],
             'sender_side' => 'employer',
             'sender_id' => $user->id,
             'ticket_id' => $ticket->id
@@ -130,6 +131,12 @@ class TicketController extends Controller
             "notification_employer",
             ['ticket' => $ticket->id]
         );
+        $smsService = new SmsService();
+        $smsText = "کارفرمای گرامی تیکت شما در سیستم ثبت شد\n به زودی کارشناسان ما با شما ارتباط خواهند گرفت\n شرکت پدهوشا";
+        $smsService->sendText($user->mobile, $smsText);
+        $smsService = new SmsService();
+        $smsText = "یک پیامک جدید در سیستم به ثبت رسید\n شرکت پدهوشا";
+        $smsService->sendText($user->mobile, $smsText);
         return response()->json([
             'message' => 'ثبت تیکت جدید',
             'data' => $ticket,
