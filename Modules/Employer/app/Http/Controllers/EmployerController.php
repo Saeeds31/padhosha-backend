@@ -3,6 +3,7 @@
 namespace Modules\Employer\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -45,7 +46,7 @@ class EmployerController extends Controller
             $path = $request->file('file')->store('tickets', 'public');
             $validated['file'] = $path;
         }
-        
+
         if ($request->hasFile('voice')) {
             $path = $request->file('voice')->store('tickets', 'public');
             $validated['voice'] = $path;
@@ -61,6 +62,7 @@ class EmployerController extends Controller
         $ticket->update([
             'status' => 'pending'
         ]);
+
         return response()->json([
             'message' => 'پیام با موفقیت ثبت شد',
             'data' => $message,
@@ -96,6 +98,11 @@ class EmployerController extends Controller
             "notification_employer",
             ['employer' => $employer->id]
         );
+        $smsService = new SmsService();
+        $smsText = "رسید شما با موفقیت در سیستم ثبت شد و به زودی توسط کارشناسان ما بررسی خواهد شد\nشرکت پدهوشا";
+        $smsService->sendText($user->mobile, $smsText);
+        $smsText = "یک رسید جدید توسط " . $user->full_name . "در سیستم به ثبت رسید\n شرکت پدهوشا";
+        $smsService->sendText("09113894304", $smsText);
         return response()->json([
             'message' => 'با موفقیت ثبت شد',
             'deposit' => $deposit,
@@ -123,6 +130,7 @@ class EmployerController extends Controller
             'admin_note' => 'nullable|string',
         ]);
         $deposit = Deposit::findOrFail($id);
+        $employer = Employer::with(['user'])->where('id', $deposit->employer_id)->first();
         $deposit->update([
             'status' => $validated['status'],
             'admin_note' => $validated['admin_note'],
@@ -133,6 +141,14 @@ class EmployerController extends Controller
             "notification_employer",
             ['employer' => $deposit->employer_id]
         );
+        $smsService = new SmsService();
+        if ($validated['status'] == 'accepted') {
+            $smsText = "رسید پرداختی شما با موفقیت تایید شد\n شرکت پدهوشا";
+        } else {
+            $smsText = "رسید پرداختی شما رد شد\n برای مشاهده علت آن به پنل خود مراجعه کنید\n شرکت پدهوشا";
+        }
+
+        $smsService->sendText($employer->user->mobile, $smsText);
         return response()->json([
             'message' => 'با موفقیت ویرایش شد',
             'cost' => $deposit,
@@ -180,7 +196,7 @@ class EmployerController extends Controller
         if ($dateTo = $request->get('dateTo')) {
             $query->whereDate('created_at', '<=', $dateTo);
         }
-        $query->where('employer_id',$employerId);
+        $query->where('employer_id', $employerId);
         $total = $query->sum('amount');
         $data = $query->paginate(20);
         return response()->json([
@@ -206,6 +222,7 @@ class EmployerController extends Controller
             ], 401);
         }
         $query = Cost::query();
+        $query->where('employer_id', $employer->id);
         if ($amount = $request->get('amount')) {
             $query->where('amount', '>=', $amount);
         }
@@ -216,6 +233,7 @@ class EmployerController extends Controller
         if ($dateTo = $request->get('dateTo')) {
             $query->whereDate('created_at', '<=', $dateTo);
         }
+
         $total = $query->sum('amount');
         $data = $query->latest()->paginate(20);
         return response()->json([
@@ -254,7 +272,7 @@ class EmployerController extends Controller
         if ($dateTo = $request->get('dateTo')) {
             $query->whereDate('created_at', '<=', $dateTo);
         }
-
+        $query->where('employer_id', $employer->id);
         $total = (clone $query)->where('status', 'accepted')->sum('amount');
         $data = $query->latest()->paginate(20);
         return response()->json([

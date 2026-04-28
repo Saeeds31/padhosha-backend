@@ -136,7 +136,7 @@ class TicketController extends Controller
         $smsService->sendText($user->mobile, $smsText);
         $smsService = new SmsService();
         $smsText = "یک پیامک جدید در سیستم به ثبت رسید\n شرکت پدهوشا";
-        $smsService->sendText($user->mobile, $smsText);
+        $smsService->sendText("09113894304", $smsText);
         return response()->json([
             'message' => 'ثبت تیکت جدید',
             'data' => $ticket,
