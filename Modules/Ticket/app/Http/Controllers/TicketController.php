@@ -43,7 +43,7 @@ class TicketController extends Controller
             'status' => 'answered'
         ]);
         $smsService = new SmsService();
-        $smsText ="یک پاسخ برای تیکت شما در پلن ثبت شد لطفا حساب کاربری خود را بررسی کنید\nشرکت پدهوشا";
+        $smsText ="یک پاسخ برای تیکت شما در پنل پشتیبانی ثبت شد لطفا حساب کاربری خود را بررسی کنید\nشرکت پدهوشا";
         $smsService->sendText($ticket->sender->mobile, $smsText);
         return response()->json([
             'message' => 'پیام با موفقیت ثبت شد',

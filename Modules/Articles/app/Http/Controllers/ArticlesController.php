@@ -19,9 +19,9 @@ class ArticlesController extends Controller
         $query = Article::query();
         $category = null;
         if ($category_id = $request->get('category_id')) {
-            $category = ArticleCategory::findOrFail($category_id);
+            $category = ArticleCategory::where('slug',$category_id)->first();
             $query->whereHas('categories', function ($q) use ($category_id) {
-                $q->where('id', $category_id);
+                $q->where('slug', $category_id);
             });
         }
         $articles = $query->with('categories', 'author')
@@ -37,7 +37,7 @@ class ArticlesController extends Controller
     public function frontArticle($id)
     {
         // مقاله اصلی
-        $article = Article::with('categories', 'author', 'comments')->find($id);
+        $article = Article::with(['categories', 'author', 'comments'])->find($id);
 
         if (!$article) {
             return response()->json([
