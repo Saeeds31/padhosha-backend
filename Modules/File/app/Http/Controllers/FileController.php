@@ -8,10 +8,40 @@ use Illuminate\Support\Facades\Storage;
 use Modules\File\Http\Requests\FileStoreRequest;
 use Modules\File\Http\Requests\FileUpdateRequest;
 use Modules\File\Models\File;
+use Modules\File\Models\FileCategory;
 use Modules\Notifications\Services\NotificationService;
 
 class FileController extends Controller
 {
+    public function fileTypes()
+    {
+        $fileTypes = File::select('file_type')
+            ->distinct()
+            ->pluck('file_type');
+        return response()->json([
+            'success' => true,
+            'message' => 'لیست   فایل ها ',
+            'data'    => $fileTypes
+        ]);
+    }
+    public function frontIndex(Request $request)
+    {
+        $query = File::query();
+        if ($category_id = $request->get('category_id')) {
+            $category = FileCategory::where('slug', $category_id)->first();
+            $query->where('category_id', $category_id);
+        }
+        if ($file_type = $request->get('file_type')) {
+            $query->where('file_type', $file_type);
+        }
+        $files = $query->with(['category'])->paginate(20);
+        return response()->json([
+            'success' => true,
+            'message' => 'لیست   فایل ها ',
+            'data'    => $files,
+            'category'    => $category,
+        ]);
+    }
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 10);

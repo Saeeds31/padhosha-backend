@@ -43,8 +43,8 @@ class TicketController extends Controller
             'status' => 'answered'
         ]);
         $smsService = new SmsService();
-        $smsText ="یک پاسخ برای تیکت شما در پنل پشتیبانی ثبت شد لطفا حساب کاربری خود را بررسی کنید\nشرکت پدهوشا";
-        $smsService->sendText($ticket->sender->mobile, $smsText);
+        $smsService->sendToKavenegar('tresponse', $ticket->sender->mobile, $ticket->id);
+
         return response()->json([
             'message' => 'پیام با موفقیت ثبت شد',
             'data' => $message,
@@ -135,11 +135,13 @@ class TicketController extends Controller
             ['ticket' => $ticket->id]
         );
         $smsService = new SmsService();
-        $smsText = "کارفرمای گرامی تیکت شما در سیستم ثبت شد\n به زودی کارشناسان ما با شما ارتباط خواهند گرفت\n شرکت پدهوشا";
-        $smsService->sendText($user->mobile, $smsText);
+
+        $smsService->sendToKavenegar('sendticket',$user->mobile, $ticket->id);
+
         $smsService = new SmsService();
-        $smsText = "یک پیامک جدید در سیستم به ثبت رسید\n شرکت پدهوشا";
-        $smsService->sendText("09113894304", $smsText);
+   
+        $smsService->sendToKavenegar('adminticketnotif',"09113894304", $ticket->id);
+
         return response()->json([
             'message' => 'ثبت تیکت جدید',
             'data' => $ticket,

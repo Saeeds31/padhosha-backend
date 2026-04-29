@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class SmsService
 {
@@ -25,5 +26,17 @@ class SmsService
             'message' => $text,
             'sender' => '1000066006700'
         ]);
+    }
+    public function sendToKavenegar(string  $template,string  $mobile,string  $token)
+    {
+        $apiKey = config('services.kavenegar.api_key');
+        $url = "https://api.kavenegar.com/v1/{$apiKey}/verify/lookup.json";
+    
+        $response = Http::timeout(5)->retry(2, 100)->get($url, [
+            'receptor' => $mobile,
+            'token'    => $token,
+            'template' => $template
+        ]);
+        Log::info('Kavenegar response: ' . $response->body());
     }
 }

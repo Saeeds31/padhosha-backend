@@ -12,6 +12,14 @@ use Modules\Notifications\Services\NotificationService;
 
 class FileCategoryController extends Controller
 {
+    public function frontIndex(){
+        $categories=FileCategory::orderBy('id')->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'لیست  دسته بندی فایل ها ',
+            'data'    => $categories
+        ]);
+    }
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 10);

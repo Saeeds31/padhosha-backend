@@ -8,3 +8,8 @@ Route::middleware(['auth:sanctum'])->prefix('v1/admin')->group(function () {
     Route::apiResource('files', FileController::class)->names('file');
     Route::apiResource('file-categories', FileCategoryController::class)->names('file-categories');
 });
+Route::prefix('v1/front')->group(function () {
+    Route::get('files', [FileController::class, 'frontIndex'])->name('file-frontIndex');
+    Route::get('file_types', [FileController::class, 'fileTypes'])->name('file-fileTypes');
+    Route::get('file-categories', [FileCategoryController::class,'frontIndex'])->name('file-categories-frontIndex');
+});

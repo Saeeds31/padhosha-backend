@@ -99,10 +99,8 @@ class EmployerController extends Controller
             ['employer' => $employer->id]
         );
         $smsService = new SmsService();
-        $smsText = "رسید شما با موفقیت در سیستم ثبت شد و به زودی توسط کارشناسان ما بررسی خواهد شد\nشرکت پدهوشا";
-        $smsService->sendText($user->mobile, $smsText);
-        $smsText = "یک رسید جدید توسط " . $user->full_name . "در سیستم به ثبت رسید\n شرکت پدهوشا";
-        $smsService->sendText("09113894304", $smsText);
+        $smsService->sendToKavenegar('reciept', $user->mobile, $deposit->id);
+        $smsService->sendToKavenegar('adminreciept', "09113894304", $employer->bussines_label);
         return response()->json([
             'message' => 'با موفقیت ثبت شد',
             'deposit' => $deposit,
@@ -112,12 +110,17 @@ class EmployerController extends Controller
     {
         $validated = $request->validated();
         $cost = Cost::create($validated);
+        $employer = Employer::with(['user'])->where('id', $cost->employer_id)->first();
         $notifications->create(
             " هزینه  کارفرما",
             " یک هزینه برای کارفرما  {$cost->employer_id}در سیستم ثبت  شد",
             "notification_employer",
             ['employer' => $cost->employer_id]
         );
+        $smsService = new SmsService();
+
+        $smsService->sendToKavenegar('costemployer', $employer->user->mobile, $cost->title);
+
         return response()->json([
             'message' => 'با موفقیت ثبت شد',
             'cost' => $cost,
@@ -143,12 +146,10 @@ class EmployerController extends Controller
         );
         $smsService = new SmsService();
         if ($validated['status'] == 'accepted') {
-            $smsText = "رسید پرداختی شما با موفقیت تایید شد\n شرکت پدهوشا";
+            $smsService->sendToKavenegar('acceptedreceipt', $employer->user->mobile, $deposit->id);
         } else {
-            $smsText = "رسید پرداختی شما رد شد\n برای مشاهده علت آن به پنل خود مراجعه کنید\n شرکت پدهوشا";
+            $smsService->sendToKavenegar('rejectedreciept', $employer->user->mobile, $deposit->id);
         }
-
-        $smsService->sendText($employer->user->mobile, $smsText);
         return response()->json([
             'message' => 'با موفقیت ویرایش شد',
             'cost' => $deposit,

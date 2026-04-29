@@ -3,6 +3,7 @@
 namespace Modules\Users\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -71,13 +72,9 @@ class AuthController extends Controller
             ['mobile' => $mobile],
             ['token' => $token, 'expires_at' => now()->addMinutes(5)]
         );
+        $smsService = new SmsService();
+        $smsService->sendToKavenegar('verify', $mobile, $token);
 
-        $response = Http::get("https://api.kavenegar.com/v1/766E333435704B712F6D626858324876395A396A79574F58584669374C4E7450634F613364505A4A6D2F453D/verify/lookup.json", [
-            'receptor' => $mobile,
-            'token'    => $token,
-            'template' => "verify"
-        ]);
-        Log::info('Kavenegar response: ' . $response->body());
 
         return true;
     }
