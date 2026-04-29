@@ -25,7 +25,7 @@ class TicketController extends Controller
             'voice' => 'nullable|file|max:4096',
             'ticket_id' => 'required|integer'
         ]);
-        $ticket = Ticket::findOrFail($validated['ticket_id']);
+        $ticket = Ticket::with(["sender"])->findOrFail($validated['ticket_id']);
         if (!empty($ticket->doer_id) && ($ticket->doer_id != $user->id)) {
             return response()->json([
                 'message' => 'شما اجازه پاسخ دادن به این تیکت را ندارید',

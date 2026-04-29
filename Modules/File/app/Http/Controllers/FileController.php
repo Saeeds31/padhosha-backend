@@ -27,6 +27,7 @@ class FileController extends Controller
     public function frontIndex(Request $request)
     {
         $query = File::query();
+        $category = null;
         if ($category_id = $request->get('category_id')) {
             $category = FileCategory::where('slug', $category_id)->first();
             $query->where('category_id', $category_id);
