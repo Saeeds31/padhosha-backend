@@ -187,22 +187,35 @@ class PortfolioController extends Controller
             'category'    => $category,
         ]);
     }
-    public function frontDetail(Request $request, $id)
+    public function frontDetail(Request $request, string $slug)
     {
         $portfolio = Portfolio::with([
             'categories',
             'technologies',
             'images:id,portfolio_id,path',
-        ])->findOrFail($id);
-
+        ])->where('slug', $slug)->first();
+        if (!$portfolio) {
+            return response()->json([
+                'success' => false,
+                'message' => "نمونه کار مد نظر پیدا نشد"
+            ]);
+        }
         return response()->json([
             'success' => true,
             'data' =>        $portfolio
         ]);
     }
-    public function similar($id)
+    public function similar(string $slug)
     {
-        $portfolio = Portfolio::with('categories')->findOrFail($id);
+        $portfolio = Portfolio::with('categories')->where('slug', $slug)->first();
+        if (!$portfolio) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'similar_portfolios' => []
+                ]
+            ]);
+        }
         // گرفتن ID دسته‌ها
         $categoryIds = $portfolio->categories->pluck('id');
         // پیدا کردن نمونه کارات مشابه
