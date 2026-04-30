@@ -199,7 +199,7 @@ class EmployerController extends Controller
         }
         $query->where('employer_id', $employerId);
         $total = $query->sum('amount');
-        $data = $query->paginate(20);
+        $data = $query->latest()->paginate(20);
         return response()->json([
             'message' => 'اطلاعات مالی کارفرما',
             'employer' => $employer,
