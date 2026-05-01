@@ -16,6 +16,24 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function changeStatus(Request $request, $id, NotificationService $notifications)
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:closed,awaiting_payment'
+        ]);
+        $ticket = Ticket::findOrFail($id)->first();
+        $ticket->update($validated);
+        $notifications->create(
+            "تغییر وضعیت تیکت",
+            " وضعیت تیکت شماره   {$ticket->id}در سیستم تغییر کرد",
+            "notification_employer",
+            ['ticket' => $ticket->id]
+        );
+        return response()->json([
+            'message' => 'وضعیت تیکت با موفقیت تغییر کرد',
+            'data' => $ticket
+        ]);
+    }
     public function sendMessage(Request $request)
     {
         $user = $request->user();
@@ -136,11 +154,11 @@ class TicketController extends Controller
         );
         $smsService = new SmsService();
 
-        $smsService->sendToKavenegar('sendticket',$user->mobile, $ticket->id);
+        $smsService->sendToKavenegar('sendticket', $user->mobile, $ticket->id);
 
         $smsService = new SmsService();
-   
-        $smsService->sendToKavenegar('adminticketnotif',"09113894304", $ticket->id);
+
+        $smsService->sendToKavenegar('adminticketnotif', "09113894304", $ticket->id);
 
         return response()->json([
             'message' => 'ثبت تیکت جدید',

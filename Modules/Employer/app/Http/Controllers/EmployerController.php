@@ -90,7 +90,10 @@ class EmployerController extends Controller
         $validated['status'] = 'pending';
         $validated['employer_id'] = $employer->id;
         $validated['admin_note'] = '';
-
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('employer/reciepts', 'public');
+            $validated['image'] = $path;
+        }
         $deposit = Deposit::create($validated);
         $notifications->create(
             " پرداختی  کارفرما",
