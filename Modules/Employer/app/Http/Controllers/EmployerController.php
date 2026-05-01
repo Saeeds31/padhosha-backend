@@ -55,7 +55,7 @@ class EmployerController extends Controller
             'message' => $validated['message'],
             'attachment' => $validated['file'],
             'voice' => $validated['voice'],
-            'sender_side' => 'padhosha',
+            'sender_side' => 'employer',
             'sender_id' => $user->id,
             'ticket_id' => $ticket->id
         ]);
