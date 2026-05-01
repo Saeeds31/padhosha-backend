@@ -100,7 +100,7 @@ class EmployerController extends Controller
         );
         $smsService = new SmsService();
         $smsService->sendToKavenegar('reciept', $user->mobile, $deposit->id);
-        $smsService->sendToKavenegar('adminreciept', "09113894304", $employer->bussines_label);
+        $smsService->sendToKavenegar('adminreciept', "09113894304", $deposit->id);
         return response()->json([
             'message' => 'با موفقیت ثبت شد',
             'deposit' => $deposit,
@@ -119,7 +119,7 @@ class EmployerController extends Controller
         );
         $smsService = new SmsService();
 
-        $smsService->sendToKavenegar('costemployer', $employer->user->mobile, $cost->title);
+        $smsService->sendToKavenegar('costemployer', $employer->user->mobile, $cost->id);
 
         return response()->json([
             'message' => 'با موفقیت ثبت شد',
