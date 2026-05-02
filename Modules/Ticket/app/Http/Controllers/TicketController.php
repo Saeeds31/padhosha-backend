@@ -21,7 +21,7 @@ class TicketController extends Controller
         $validated = $request->validate([
             'status' => 'required|string|in:closed,awaiting_payment'
         ]);
-        $ticket = Ticket::findOrFail($id)->first();
+        $ticket = Ticket::findOrFail($id);
         $ticket->update($validated);
         $notifications->create(
             "تغییر وضعیت تیکت",
