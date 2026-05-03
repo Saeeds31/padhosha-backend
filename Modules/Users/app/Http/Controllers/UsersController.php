@@ -77,6 +77,23 @@ class UsersController extends Controller
 
         return response()->json($users);
     }
+    public function getSupporter(Request $request)
+    {
+        $query = User::with(['roles', 'addresses', 'wallet']);
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'like', "%{$search}%")
+                    ->orWhere('mobile', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->whereHas('roles', function ($query) {
+            $query->whereNotIn('slug', ['employer', 'superAdmin']);
+        })->paginate(20);
+
+        return response()->json($users);
+    }
+
     // لیست مدیران
     public function managerIndex(Request $request)
     {

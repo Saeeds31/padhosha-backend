@@ -10,18 +10,62 @@ use Modules\Employer\Models\Employer;
 use Modules\Notifications\Services\NotificationService;
 use Modules\Ticket\Models\Message;
 use Modules\Ticket\Models\Ticket;
+use Modules\Users\Models\User;
 
 class TicketController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    public function changeDoer(Request $request, $id, NotificationService $notifications)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+        $ticket = Ticket::findOrFail($id);
+        $user = $request->user();
+        $isSuperAdmin = $user->roles()->where('slug', 'superAdmin')->exists();
+        if (!$isSuperAdmin) {
+            if ($ticket->doer_id != $user->id) {
+                return response()->json([
+                    'message' => ' شما اجازه دسترسی به این تیکت را ندارید ',
+
+                ], 401);
+            }
+        }
+        $ticket->update([
+            'doer_id' => $validated['user_id']
+        ]);
+        $goalUser = User::findOrFail($validated['user_id']);
+        $notifications->create(
+            "ارجاع تیکت",
+            " تیکت شماره   {$ticket->id}در سیستم ارجاع داده شد",
+            "notification_employer",
+            ['ticket' => $ticket->id]
+        );
+        $smsService = new SmsService();
+        $smsService->sendToKavenegar('referd', $goalUser->mobile, $ticket->id);
+        return response()->json([
+            'message' => 'تیکت باموفقیت ارجاع داده شد',
+            'data' => $ticket
+        ]);
+    }
     public function changeStatus(Request $request, $id, NotificationService $notifications)
     {
         $validated = $request->validate([
             'status' => 'required|string|in:closed,awaiting_payment'
         ]);
         $ticket = Ticket::findOrFail($id);
+        $user = $request->user();
+        $isSuperAdmin = $user->roles()->where('slug', 'superAdmin')->exists();
+        if (!$isSuperAdmin) {
+            if ($ticket->doer_id != $user->id) {
+                return response()->json([
+                    'message' => ' شما اجازه دسترسی به این تیکت را ندارید ',
+
+                ], 401);
+            }
+        }
         $ticket->update($validated);
         $notifications->create(
             "تغییر وضعیت تیکت",
@@ -70,7 +114,12 @@ class TicketController extends Controller
     }
     public function index(Request $request)
     {
+        $user = $request->user();
         $query = Ticket::query()->with('doer', 'sender');
+        $isSuperAdmin = $user->roles()->where('slug', 'superAdmin')->exists();
+        if (!$isSuperAdmin) {
+            $query->where('doer_id', $user->id);
+        }
         if ($dateFrom = $request->get('dateFrom')) {
             $query->whereDate('created_at', '>=', $dateFrom);
         }
@@ -174,9 +223,19 @@ class TicketController extends Controller
     /**
      * Show the specified resource.
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        $user = $request->user();
+        $isSuperAdmin = $user->roles()->where('slug', 'superAdmin')->exists();
         $ticket = Ticket::with(['doer', 'sender'])->findOrFail($id);
+        if (!$isSuperAdmin) {
+            if ($ticket->doer_id != $user->id) {
+                return response()->json([
+                    'message' => ' شما اجازه دسترسی به این تیکت را ندارید ',
+
+                ], 401);
+            }
+        }
         $messages = Message::with(['sender'])->where('ticket_id', $ticket->id)->latest()->get();
         $cost = Cost::where('costable_type', 'Ticket')->where('costable_id', $ticket->id)->first();
         return response()->json([
