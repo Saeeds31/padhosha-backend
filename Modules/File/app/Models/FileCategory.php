@@ -15,6 +15,7 @@ class FileCategory extends Model
      */
     protected $fillable = [
         'title',
+        'slug',
         'icon',
         'meta_title',
         'meta_description'

@@ -14,6 +14,7 @@ class FileCategoryUpdateRequest extends FormRequest
         return [
             'title'            => ['sometimes', 'string', 'max:255'],
             'icon'             => ['sometimes', 'file', 'max:1024'],
+            'slug'             => ['sometimes', 'string', 'max:1024'],
             'meta_title'       => ['sometimes', 'string', 'max:255'],
             'meta_description' => ['sometimes', 'string'],
         ];

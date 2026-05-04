@@ -13,6 +13,7 @@ class FileCategoryStoreRequest extends FormRequest
     {
         return [
             'title'            => ['required', 'string', 'max:255'],
+            'slug'             => ['nullable', 'string', 'max:1024'],
             'icon'             => ['nullable', 'file', 'max:1024'],
             'meta_title'       => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
