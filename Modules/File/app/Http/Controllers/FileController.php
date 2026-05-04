@@ -30,7 +30,8 @@ class FileController extends Controller
         $category = null;
         if ($category_id = $request->get('category_id')) {
             $category = FileCategory::where('slug', $category_id)->first();
-            $query->where('category_id', $category_id);
+            if ($category)
+                $query->where('category_id', $category->id);
         }
         if ($file_type = $request->get('file_type')) {
             $query->where('file_type', $file_type);
