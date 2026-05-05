@@ -219,7 +219,7 @@ class PortfolioController extends Controller
         $categoryIds = $portfolio->categories->pluck('id');
         $similar = Portfolio::where('status', 1)
             ->whereHas('categories', function ($q) use ($categoryIds) {
-                $q->whereIn('portfolio_categories.id', $categoryIds);
+                $q->whereIn('portfolio_category_id', $categoryIds);
             })
             ->where('id', '!=', $portfolio->id) // حذف نمونه کار اصلی
             ->with([
