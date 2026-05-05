@@ -207,7 +207,7 @@ class PortfolioController extends Controller
     }
     public function similar(string $slug)
     {
-        $portfolio = Portfolio::with('categories')->where('slug', $slug)->first();
+        $portfolio = Portfolio::with(['categories'])->where('slug', $slug)->first();
         if (!$portfolio) {
             return response()->json([
                 'success' => true,
@@ -216,12 +216,10 @@ class PortfolioController extends Controller
                 ]
             ]);
         }
-        // گرفتن ID دسته‌ها
         $categoryIds = $portfolio->categories->pluck('id');
-        // پیدا کردن نمونه کارات مشابه
         $similar = Portfolio::where('status', 1)
             ->whereHas('categories', function ($q) use ($categoryIds) {
-                $q->whereIn('categories.id', $categoryIds);
+                $q->whereIn('portfolio_categories.id', $categoryIds);
             })
             ->where('id', '!=', $portfolio->id) // حذف نمونه کار اصلی
             ->with([
@@ -230,7 +228,6 @@ class PortfolioController extends Controller
             ])
             ->limit(10)
             ->get();
-        // اگر مشابه پیدا نشد → fallback
         if ($similar->isEmpty()) {
             $similar = Portfolio::where('status', 1)
                 ->where('id', '!=', $portfolio->id)

@@ -3,6 +3,7 @@
 namespace Modules\Contact\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Modules\Contact\Models\Contact;
 use Modules\Notifications\Services\NotificationService;
@@ -30,6 +31,8 @@ class ContactController extends Controller
             "notifications_user",
             ['contact' => $contact->id]
         );
+        $smsService = new SmsService();
+        $smsService->sendToKavenegar('contact', $validated_data["mobile"], $validated_data["subject"]);
         return response()->json(
             [
                 'message' => 'پیام شما با موفقیت ثبت شد ',
