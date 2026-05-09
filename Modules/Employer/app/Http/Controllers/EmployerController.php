@@ -195,7 +195,7 @@ class EmployerController extends Controller
     public function EmployerDepositIndex(Request $request)
     {
 
-        $query = Deposit::query();
+        $query = Deposit::with(['employer'])->query();
         if ($amount = $request->get('amount')) {
             $query->where('amount', '>=', $amount);
         }
