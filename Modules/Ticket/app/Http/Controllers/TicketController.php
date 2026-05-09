@@ -232,14 +232,14 @@ class TicketController extends Controller
         $ticket = Ticket::create([
             'title' => $validated['title'],
             'status' => 'pending',
-            'sender_id' => $employer->id
+            'sender_id' => $employer->user->id
         ]);
         $message = Message::create([
             'message' => $validated['description'],
             'attachment' => $validated['file'],
             'voice' => $validated['audio'],
             'sender_side' => 'employer',
-            'sender_id' => $employer->id,
+            'sender_id' =>  $employer->user->id,
             'ticket_id' => $ticket->id
         ]);
         $notifications->create(
