@@ -347,9 +347,13 @@ class EmployerController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 1000);
-
-        $employers = Employer::with(['user', 'subscription'])->paginate($perPage);
-
+        $query = Employer::with(['user', 'subscription']);
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('bussines_label', 'like', "%{$search}%");
+            });
+        }
+        $employers = $query->paginate($perPage);
         return response()->json([
             'success' => true,
             'message' => 'لیست کارفرمایان',
