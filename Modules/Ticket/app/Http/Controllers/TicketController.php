@@ -218,7 +218,46 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(Request $request, NotificationService $notifications)
+    {
+        $admin = $request->user();
+        $validated = $request->validate([
+            'title' => 'required|string|min:3',
+            'description' => 'required|string|min:10',
+            'file' => 'nullable|file|max:1024',
+            'audio' => 'nullable|file|max:4096',
+            'employer_id' => 'required|integer|exists:employers,id'
+        ]);
+        $employer = Employer::with(['user'])->findOrFail($validated['employer_id']);
+        $ticket = Ticket::create([
+            'title' => $validated['title'],
+            'status' => 'pending',
+            'sender_id' => $employer->id
+        ]);
+        $message = Message::create([
+            'message' => $validated['description'],
+            'attachment' => $validated['file'],
+            'voice' => $validated['audio'],
+            'sender_side' => 'employer',
+            'sender_id' => $employer->id,
+            'ticket_id' => $ticket->id
+        ]);
+        $notifications->create(
+            "تیکت کارفرما",
+            " یک تیکت برای  کارفرما با موضوع  {$ticket->title}از طرف مدیر {$admin->full_name} در سیستم ثبت  شد",
+            "notification_employer",
+            ['ticket' => $ticket->id]
+        );
+        $smsService = new SmsService();
+        $smsService->sendToKavenegar('sendticket', $employer->user->mobile, $ticket->id);
+        $smsService = new SmsService();
+        $smsService->sendToKavenegar('adminticketnotif', "09113894304", $ticket->id);
+
+        return response()->json([
+            'message' => 'ثبت تیکت جدید',
+            'data' => $ticket,
+        ]);
+    }
 
     /**
      * Show the specified resource.
