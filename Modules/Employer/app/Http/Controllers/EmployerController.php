@@ -103,7 +103,7 @@ class EmployerController extends Controller
         $deposit = Deposit::create($validated);
         $notifications->create(
             " پرداختی  کارفرما",
-            " یک رسید برای کارفرما  {$employer->bussines_label}از طرف {$admin->user->full_name} سیستم ثبت  شد",
+            " یک رسید برای کارفرما  {$employer->bussines_label}از طرف {$admin->full_name} سیستم ثبت  شد",
             "notification_employer",
             ['employer' => $employer->id]
         );
