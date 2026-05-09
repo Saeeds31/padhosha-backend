@@ -82,6 +82,39 @@ class EmployerController extends Controller
             ],
         ]);
     }
+    public function EmployersReceipt(Request $request, NotificationService $notifications)
+    {
+        $admin = $request->user();
+        $validated = $request->validate([
+            'title' => 'required|string|min:3',
+            'description' => 'required|string|min:3',
+            'image' => 'required|file|max:1024',
+            'amount' => 'required|integer|min:10000',
+            'employer_id' => 'required|integer|exists:employers,id'
+        ]);
+        $user = $request->user();
+        $employer = Employer::with(['user'])->findOrFail($validated['employer_id']);
+        $validated['status'] = 'pending';
+        $validated['admin_note'] = '';
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('employer/reciepts', 'public');
+            $validated['image'] = $path;
+        }
+        $deposit = Deposit::create($validated);
+        $notifications->create(
+            " پرداختی  کارفرما",
+            " یک رسید برای کارفرما  {$employer->bussines_label}از طرف {$admin->user->full_name} سیستم ثبت  شد",
+            "notification_employer",
+            ['employer' => $employer->id]
+        );
+        $smsService = new SmsService();
+        $smsService->sendToKavenegar('reciept', $employer->user->mobile, $deposit->id);
+        $smsService->sendToKavenegar('adminreciept', "09113894304", $deposit->id);
+        return response()->json([
+            'message' => 'با موفقیت ثبت شد',
+            'deposit' => $deposit,
+        ]);
+    }
     public function receipt(DepositStoreRequest $request, NotificationService $notifications)
     {
         $validated = $request->validated();

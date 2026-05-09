@@ -16,7 +16,6 @@ class DepositStoreRequest extends FormRequest
             'description'=>'required|string|min:3',
             'image'=>'required|file|max:1024',
             'amount'=>'required|integer|min:10000',
-            
         ];
     }
 

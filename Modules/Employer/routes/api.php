@@ -8,6 +8,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1/admin')->group(function () {
     Route::post('employers-comment', [EmployerController::class, 'EmployerComment'])->name('employer-EmployerComment');
     Route::post('employers-subscription', [EmployerController::class, 'EmployerSubscription'])->name('EmployerSubscription');
     Route::post('/employers-cost', [EmployerController::class, 'EmployerCostStore'])->name('EmployerCostStore');
+    Route::post('/employers-receipt', [EmployerController::class, 'EmployersReceipt'])->name('employersReceipt');
     Route::get('/employer-deposit', [EmployerController::class, 'EmployerDepositIndex'])->name('EmployerDepositIndex');
     Route::put('/employer-deposit/{id}', [EmployerController::class, 'EmployerUpdateDeposit'])->name('EmployerUpdateDeposit');
 
