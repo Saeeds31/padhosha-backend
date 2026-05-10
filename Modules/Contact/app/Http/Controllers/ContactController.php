@@ -12,7 +12,7 @@ class ContactController extends Controller
 {
     public function frontContact(Request $request, NotificationService $notifications)
     {
-        $user = $request->user('sanctum');
+        $user = $request->user();
         $validated_data = $request->validate([
             'full_name' => $user ? 'nullable' : 'required|string|min:6',
             'mobile' => $user ? 'nullable' : 'required|string|size:11',
