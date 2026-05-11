@@ -32,7 +32,7 @@ class ContactController extends Controller
             ['contact' => $contact->id]
         );
         $smsService = new SmsService();
-        $smsService->sendToKavenegar('contact', $validated_data["mobile"], $validated_data["subject"]);
+        $smsService->sendToKavenegar('contact', $validated_data["mobile"], $contact->id, ['token20' => $validated_data["subject"]]);
         return response()->json(
             [
                 'message' => 'پیام شما با موفقیت ثبت شد ',

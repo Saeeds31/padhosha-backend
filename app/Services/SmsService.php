@@ -27,16 +27,17 @@ class SmsService
             'sender' => '1000066006700'
         ]);
     }
-    public function sendToKavenegar(string  $template, string  $mobile, string  $token)
+    public function sendToKavenegar(string $template, string $mobile, string $token, array $extraData = [])
     {
         $apiKey = env("KAVENEGAR_API_KEY");
         $url = "https://api.kavenegar.com/v1/{$apiKey}/verify/lookup.json";
-
-        $response = Http::timeout(5)->retry(2, 100)->get($url, [
+        $data = [
             'receptor' => $mobile,
             'token'    => $token,
             'template' => $template
-        ]);
+        ];
+        $data = array_merge($data, $extraData);
+        $response = Http::timeout(5)->retry(2, 100)->get($url, $data);
         Log::info('Kavenegar response: ' . $response->body());
     }
 }
