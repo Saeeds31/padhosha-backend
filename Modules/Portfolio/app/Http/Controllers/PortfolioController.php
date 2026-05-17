@@ -40,7 +40,12 @@ class PortfolioController extends Controller
         if ($request->hasFile('main_image')) {
             $data['main_image'] = $request->file('main_image')->store('portfolios/main', 'public');
         }
-
+        if ($request->hasFile('home_image_desktop')) {
+            $data['home_image_desktop'] = $request->file('home_image_desktop')->store('portfolios/main', 'public');
+        }
+        if ($request->hasFile('home_image_mobile')) {
+            $data['home_image_mobile'] = $request->file('home_image_mobile')->store('portfolios/main', 'public');
+        }
         $portfolio = Portfolio::create($data);
         // دسته‌بندی‌ها
         if (!empty($data['categories'])) {
@@ -90,14 +95,28 @@ class PortfolioController extends Controller
     {
         $data = $request->validated();
         if ($request->hasFile('main_image')) {
-            // حالت 2: فایل جدید اومده
             if ($portfolio->main_image) {
                 Storage::disk('public')->delete($portfolio->main_image);
             }
             $data['main_image'] = $request->file('main_image')->store('portfolios/main', 'public');
         } elseif ($request->filled('main_image') && is_string($request->main_image)) {
-            // حالت 1: رشته ارسال شده (تصویر قبلی دست نخورده)
             $data['main_image'] = $portfolio->main_image;
+        }
+        if ($request->hasFile('home_image_mobile')) {
+            if ($portfolio->home_image_mobile) {
+                Storage::disk('public')->delete($portfolio->home_image_mobile);
+            }
+            $data['home_image_mobile'] = $request->file('home_image_mobile')->store('portfolios/main', 'public');
+        } elseif ($request->filled('home_image_mobile') && is_string($request->home_image_mobile)) {
+            $data['home_image_mobile'] = $portfolio->home_image_mobile;
+        }
+        if ($request->hasFile('home_image_desktop')) {
+            if ($portfolio->home_image_desktop) {
+                Storage::disk('public')->delete($portfolio->home_image_desktop);
+            }
+            $data['home_image_desktop'] = $request->file('home_image_desktop')->store('portfolios/main', 'public');
+        } elseif ($request->filled('home_image_desktop') && is_string($request->home_image_desktop)) {
+            $data['home_image_desktop'] = $portfolio->home_image_desktop;
         }
 
         $portfolio->update($data);
@@ -142,7 +161,12 @@ class PortfolioController extends Controller
         if ($portfolio->main_image) {
             Storage::disk('public')->delete($portfolio->main_image);
         }
-
+        if ($portfolio->home_image_desktop) {
+            Storage::disk('public')->delete($portfolio->home_image_desktop);
+        }
+        if ($portfolio->home_image_mobile) {
+            Storage::disk('public')->delete($portfolio->home_image_mobile);
+        }
         foreach ($portfolio->images as $img) {
             Storage::disk('public')->delete($img->path);
             $img->delete();

@@ -21,6 +21,8 @@ class Portfolio extends Model
     protected $fillable = [
         'title',
         'main_image',
+        'home_image_desktop',
+        'home_image_mobile',
         'link',
         'meta_title',
         'meta_description',
@@ -48,7 +50,7 @@ class Portfolio extends Model
 
     public static function homeData()
     {
-       
+
         $portfolios = self::with(['categories', 'images', 'technologies'])
             ->where('status', true)
             ->get();

@@ -14,6 +14,8 @@ class PortfolioUpdateRequest extends FormRequest
         return [
             'title'            => ['required', 'string', 'max:255'],
             'main_image'             => ['sometimes', 'file', 'max:1024'],
+            'home_image_desktop'             => ['sometimes', 'file', 'max:2048'],
+            'home_image_mobile'             => ['sometimes', 'file', 'max:2048'],
             'link'       => ['sometimes', 'string'],
             'slug'            => ['sometimes', 'string', 'max:255'],
             'meta_title'       => ['sometimes', 'string', 'max:255'],
