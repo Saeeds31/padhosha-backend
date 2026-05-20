@@ -19,7 +19,7 @@ class ArticlesController extends Controller
         $query = Article::query();
         $category = null;
         if ($category_id = $request->get('category_id')) {
-            $category = ArticleCategory::where('slug',$category_id)->first();
+            $category = ArticleCategory::where('slug', $category_id)->first();
             $query->whereHas('categories', function ($q) use ($category_id) {
                 $q->where('slug', $category_id);
             });
@@ -34,10 +34,9 @@ class ArticlesController extends Controller
             'category' => $category
         ]);
     }
-    public function frontArticle($id)
+    public function frontArticle($slug)
     {
-        // مقاله اصلی
-        $article = Article::with(['categories', 'author', 'comments'])->find($id);
+        $article = Article::with(['categories', 'author', 'comments'])->where('slug', $slug)->first();
 
         if (!$article) {
             return response()->json([
@@ -69,6 +68,40 @@ class ArticlesController extends Controller
         ]);
     }
 
+    public function relatedArticles($slug)
+    {
+        $article = Article::where('slug', $slug)->first();
+        if (!$article) {
+            return response()->json([
+                'success' => false,
+                'message' => 'مقاله پیدا نشد',
+            ], 404);
+        }
+        $categoryIds = $article->categories->pluck('id');
+        $relatedArticles = [];
+        if ($categoryIds->isNotEmpty()) {
+            $relatedArticles = Article::with('author')
+                ->whereHas('categories', function ($q) use ($categoryIds) {
+                    $q->whereIn('article_categories.id', $categoryIds);
+                })
+                ->where('id', '!=', $article->id)
+                ->latest('created_at')
+                ->take(8)
+                ->get();
+        }
+        if (empty($relatedArticles) || $relatedArticles->isEmpty()) {
+            $relatedArticles = Article::with('author')
+                ->where('id', '!=', $article->id)
+                ->latest('created_at')
+                ->take(8)
+                ->get();
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'مقالات مشابه',
+            'data' => $relatedArticles
+        ]);
+    }
     // List articles with pagination
     public function index(Request $request)
     {
