@@ -31,7 +31,7 @@ class DashboardController extends Controller
     public function uploadImage(Request $request)
     {
         $data = $request->validate([
-            'file' => 'required|file|min:1|max|1024'
+            'file' => 'required|file|max:1024'
         ]);
         $imagePath = "";
         if ($request->hasFile('file')) {
