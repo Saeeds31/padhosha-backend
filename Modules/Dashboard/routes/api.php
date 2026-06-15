@@ -5,4 +5,5 @@ use Modules\Dashboard\Http\Controllers\DashboardController;
 
 Route::middleware(['auth:sanctum'])->prefix('v1/admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/upload-image', [DashboardController::class, 'uploadImage'])->name('uploadImage');
 });

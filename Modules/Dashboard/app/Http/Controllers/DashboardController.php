@@ -28,4 +28,15 @@ class DashboardController extends Controller
             ]
         );
     }
+    public function uploadImage(Request $request)
+    {
+        $data = $request->validate([
+            'file' => 'required|file|min:1|max|1024'
+        ]);
+        $imagePath = "";
+        if ($request->hasFile('file')) {
+            $imagePath = $request->file('file')->store('files/images', 'public');
+        }
+        return response()->json(['url' => $imagePath]);
+    }
 }
