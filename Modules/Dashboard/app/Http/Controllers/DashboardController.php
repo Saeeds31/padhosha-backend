@@ -35,8 +35,8 @@ class DashboardController extends Controller
         ]);
         $imagePath = "";
         if ($request->hasFile('file')) {
-            $imagePath = $request->file('file')->store('files/images', 'public');
+            $imagePath = $request->file('file')->store('uploads/files/images', 'public');
         }
-        return response()->json(['url' => $imagePath]);
+        return response()->json(['url' => 'https://api.padhosha.ir/storage_public/' . $imagePath]);
     }
 }
