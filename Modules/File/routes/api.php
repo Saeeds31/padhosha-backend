@@ -10,6 +10,7 @@ Route::middleware(['auth:sanctum'])->prefix('v1/admin')->group(function () {
 });
 Route::prefix('v1/front')->group(function () {
     Route::get('files', [FileController::class, 'frontIndex'])->name('file-frontIndex');
+    Route::get('files/{slug}', [FileController::class, 'frontDetail'])->name('file-frontDetail');
     Route::get('file_types', [FileController::class, 'fileTypes'])->name('file-fileTypes');
     Route::get('file-categories', [FileCategoryController::class,'frontIndex'])->name('file-categories-frontIndex');
 });

@@ -24,6 +24,15 @@ class FileController extends Controller
             'data'    => $fileTypes
         ]);
     }
+    public function frontDetail($slug)
+    {
+        $file = File::with(['category'])->where('slug', $slug)->first();
+        return response()->json([
+            'success' => true,
+            'message' => 'جزئیات فایل  ',
+            'data'    => $file,
+        ]);
+    }
     public function frontIndex(Request $request)
     {
         $query = File::query();

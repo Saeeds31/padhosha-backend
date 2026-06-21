@@ -13,6 +13,7 @@ class FileStoreRequest extends FormRequest
     {
         return [
             'title'            => ['required', 'string', 'max:255'],
+            'slug'            => ['required', 'string', 'max:255'],
             'image'             => ['nullable', 'file', 'max:1024'],
             'file'             => ['required', 'file', 'max:51200'],
             'category_id' => ['required', 'integer', 'exists:file_category,id'],

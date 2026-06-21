@@ -16,6 +16,7 @@ class File extends Model
     protected $fillable = [
         'title',
         'file',
+        'slug',
         'file_type',
         'image',
         'category_id'
