@@ -17,6 +17,9 @@ class File extends Model
         'title',
         'file',
         'slug',
+        'meta_title',
+        'meta_description',
+        'slug',
         'file_type',
         'image',
         'category_id'

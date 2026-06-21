@@ -15,6 +15,8 @@ class FileUpdateRequest extends FormRequest
             'title'            => ['sometimes', 'string', 'max:255'],
             'slug'            => ['sometimes', 'string', 'max:255'],
             'image'             => ['sometimes', 'file', 'max:1024'],
+            'meta_title'            => ['sometimes', 'string', 'max:255'],
+            'meta_description'            => ['sometimes', 'string', 'max:255'],
             'file'             => ['sometimes', 'file', 'max:51200'],
             'category_id' => ['required', 'integer', 'exists:file_category,id'],
         ];

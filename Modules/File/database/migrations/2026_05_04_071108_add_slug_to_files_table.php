@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('files', function (Blueprint $table) {
             $table->string('slug')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
         });
     }
 
