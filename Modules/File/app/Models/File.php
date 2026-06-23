@@ -4,6 +4,8 @@ namespace Modules\File\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Comments\Models\Comment;
+
 // use Modules\File\Database\Factories\FileFactory;
 
 class File extends Model
@@ -22,10 +24,27 @@ class File extends Model
         'slug',
         'file_type',
         'image',
+        'description',
+        'education',
         'category_id'
     ];
     public function category()
     {
         return $this->belongsTo(FileCategory::class);
+    }
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+    public function approvedComments()
+    {
+        return $this->morphMany(Comment::class, 'commentable')
+            ->where('status', 'approved');
+    }
+    public function parentComments()
+    {
+        return $this->morphMany(Comment::class, 'commentable')
+            ->whereNull('parent_id')
+            ->where('status', 'approved');
     }
 }

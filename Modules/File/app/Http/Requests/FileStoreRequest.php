@@ -16,6 +16,8 @@ class FileStoreRequest extends FormRequest
             'slug'            => ['required', 'string', 'max:255'],
             'meta_title'            => ['nullable', 'string', 'max:255'],
             'meta_description'            => ['nullable', 'string', 'max:255'],
+            'description'            => ['nullable', 'string', 'min:10'],
+            'education'            => ['nullable', 'string', 'min:10'],
             'image'             => ['nullable', 'file', 'max:1024'],
             'file'             => ['required', 'file', 'max:51200'],
             'category_id' => ['required', 'integer', 'exists:file_category,id'],

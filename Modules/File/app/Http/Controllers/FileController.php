@@ -4,7 +4,10 @@ namespace Modules\File\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Modules\Comments\Http\Requests\CommentStoreRequest;
+use Modules\Comments\Models\Comment;
 use Modules\File\Http\Requests\FileStoreRequest;
 use Modules\File\Http\Requests\FileUpdateRequest;
 use Modules\File\Models\File;
@@ -27,10 +30,15 @@ class FileController extends Controller
     public function frontDetail($slug)
     {
         $file = File::with(['category'])->where('slug', $slug)->first();
+        $comments = $file->parentComments()
+        ->with(['user', 'replies.user'])
+        ->orderBy('created_at', 'desc')
+        ->get();
         return response()->json([
             'success' => true,
             'message' => 'جزئیات فایل  ',
             'data'    => $file,
+            'comments'    => $comments,
         ]);
     }
     public function frontIndex(Request $request)
@@ -80,6 +88,38 @@ class FileController extends Controller
             'message' => 'جزئیات   فایل',
             'data'    => $file
         ]);
+    }
+    public function storeComment(CommentStoreRequest $request, $slug)
+    {
+        $file = File::where('slug', $slug)->first();
+
+        if (!$file) {
+            return response()->json([
+                'success' => false,
+                'message' => 'فایل یافت نشد',
+            ], 404);
+        }
+
+        // ایجاد کامنت
+        $comment = Comment::create([
+            'content' => $request->content,
+            'user_id' => Auth::id(),
+            'parent_id' => $request->parent_id ?? null, // برای پاسخ به کامنت
+            'rating' => $request->rating ?? null,
+            'status' => 'pending', // نیاز به تایید ادمین
+            'ip' => $request->ip(),
+            'commentable_id' => $file->id,
+            'commentable_type' => File::class,
+        ]);
+
+        // بارگذاری اطلاعات کاربر
+        $comment->load('user');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'کامنت با موفقیت ثبت شد و منتظر تایید است',
+            'data' => $comment
+        ], 201);
     }
 
     // Store a new technology
