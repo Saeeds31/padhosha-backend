@@ -87,6 +87,10 @@ class TicketController extends Controller
             'voice' => 'nullable|file|max:4096',
             'ticket_id' => 'required|integer'
         ]);
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('ticket/files', 'public');
+            $validated['file'] = $path;
+        }
         $ticket = Ticket::with(["sender"])->findOrFail($validated['ticket_id']);
         if (!empty($ticket->doer_id) && ($ticket->doer_id != $user->id)) {
             return response()->json([
@@ -228,6 +232,10 @@ class TicketController extends Controller
             'audio' => 'nullable|file|max:4096',
             'employer_id' => 'required|integer|exists:employers,id'
         ]);
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('ticket/files', 'public');
+            $validated['file'] = $path;
+        }
         $employer = Employer::with(['user'])->findOrFail($validated['employer_id']);
         $ticket = Ticket::create([
             'title' => $validated['title'],
