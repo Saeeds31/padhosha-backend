@@ -31,9 +31,14 @@ class FileController extends Controller
     {
         $file = File::with(['category'])->where('slug', $slug)->first();
         $comments = $file->parentComments()
-        ->with(['user', 'replies.user'])
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->with(['user', 'replies.user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        // محاسبه حجم فایل
+        if ($file->file && Storage::disk('public')->exists($file->file)) {
+            $fileSizeInBytes = Storage::disk('public')->size($file->file);
+            $file->file_size_mb = number_format($fileSizeInBytes / 1048576, 2);
+        }
         return response()->json([
             'success' => true,
             'message' => 'جزئیات فایل  ',
